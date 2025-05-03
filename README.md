@@ -29,7 +29,7 @@ This project implements a Smart Order Router based on the static Cont & Kukanov 
 
 ### Comments on Strategies
 **Strategy 1:**
- - A wierd thing is that the task specifies that we should "attempt to execute as many shares as the allocator tells you" at each snapshot. However, the allocator only returns a valid split when the total ask size across venues is greater than or equal to the order size. When it's not, the strategy faces a choice: either buy available shares or skip the snapshot.
+ - A weird thing is that the task specifies that we should "attempt to execute as many shares as the allocator tells you" at each snapshot. However, the allocator only returns a valid split when the total ask size across venues is greater than or equal to the order size. When it's not, the strategy faces a choice: either buy available shares or skip the snapshot.
  - If we always buy available shares, the behavior becomes indistinguishable from a Best-Ask strategy—especially because the dataset contains only one exchange. Therefore, Strategy 1 is designed to skip execution if the allocator returns no valid split. This conservative approach avoids overtrading and achieves a lower total cost than Best Ask under the test conditions.
 
 Strategy 2 (Periodic allocation with fallback):
