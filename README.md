@@ -75,7 +75,13 @@ Rationale:
 * **Strategy Adaptation**: Strategy 1 performed best because prices trended upward during the test window. It captured lower prices earlier. However, in a sideways market, Strategy 2 or 3 could offer more stable cost averaging.
 * **Dynamic Strategy Switching**: Future implementations could dynamically select strategies based on short-term market trend prediction.
 * **Adaptive Parameters**: Parameters (like order size increment) could be scaled based on the remaining order size or volatility.
-* **Allocator Optimization**: The current brute-force allocator enumerates in steps of 100. This leads to issues if order size isn't a multiple of 100. In production, stochastic gradient descent (SGD) as discussed in the paper would be more efficient.
+* **Allocator Optimization**: In real world, stochastic gradient descent (SGD) as discussed in the paper would be more efficient. The current brute-force allocator enumerates in steps of 100. This leads to issues if order size isn't a multiple of 100. We can decrease the step and consider on the condition
+   ```python
+          if sum(alloc) != order_size:
+            continue
+  ```
+   to make it more robust
+
 * **Cost Function Fix**: In the `compute_cost` function, the line:
 
   ```python
