@@ -22,12 +22,12 @@
 
 This project implements a Smart Order Router based on the static Cont & Kukanov cost model. The code evaluates six execution strategies:
 
-** Baseline Strategy**
+**Baseline Strategy**
 * **Best Ask Strategy**: Selects the lowest ask price at each snapshot and buys from that venue.
 * **TWAP**: Executes a fixed amount every 60 seconds, but may lead to underfills toward the end.
 * **VWAP**: Allocates order sizes proportionally based on ask sizes across venues. Since the dataset only contains one venue, VWAP behaves similarly to Best Ask.
 
-** My Strategy based on the Allocator**
+**My Strategy based on the Allocator**
 * **Strategy 1**: Attempts to call the allocator at every snapshot. If the allocator fails to return a valid split (due to total ask size < order size), no trade is made. This conservative strategy avoids overtrading and achieves a lower cost than Best Ask.
 * **Strategy 2**: Places orders every 15 seconds (and every 1 second in the last minute). When the market depth is insufficient, it falls back to buying from the best-priced venue. This is inspired by TWAP but adapted to the high-frequency nature of the dataset (microsecond-level granularity) and the small ask sizes.
 * **Strategy 3**: Tracks the price of each trade and increases order size if a better price appears. The order size increment is capped at 10% of the total to mitigate slippage and market impact. In the last 2 minutes, it switches to fixed-interval trades. This strategy may suffer in rising markets due to delayed execution.
