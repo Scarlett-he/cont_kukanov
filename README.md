@@ -38,14 +38,14 @@ This project implements a Smart Order Router based on the static Cont & Kukanov 
  - A weird thing is that the task specifies that we should "attempt to execute as many shares as the allocator tells you" at each snapshot and "beats the best-ask baseline by at least a few basis points". However, the allocator only returns a valid split when the total ask size across venues is greater than or equal to the order size. When it's not, the strategy faces a choice: either buy available shares or skip the snapshot.
  - If we always buy available shares, the behavior becomes indistinguishable from a Best-Ask strategy—especially because the dataset contains only one exchange. Therefore, Strategy 1 is designed to skip execution if the allocator returns no valid split. This conservative approach avoids overtrading and achieves a lower total cost than Best Ask under the test conditions.
 
-Strategy 2 (Periodic allocation with fallback):
+**Strategy 2 (Periodic allocation with fallback)**:
 - This strategy resembles TWAP but with a significantly increased interval between executions. The rationale is twofold:
 
    - The dataset is high-frequency, with timestamp granularity in the nanosecond range, so placing orders at lower frequency (e.g., every 15 seconds, and every 1 second in the final minute) avoids unnecessary noise.
 
    - The available ask sizes (ask_sz_00) are relatively small, so frequent small-volume trades help in gradually filling the order. This strategy can perform well in sideways or oscillating markets, where cost averaging is advantageous.
 
-Strategy 3 (Price-sensitive adaptive sizing):
+**Strategy 3 (Price-sensitive adaptive sizing)**:
  - This strategy tracks the execution price and increases the buy quantity if a lower price appears. The additional order size is capped at 10% of the total to control slippage and market impact. In the final two minutes, it switches to fixed-interval buying.
  - However, due to the upward-trending price pattern in the dataset, the strategy experienced significant underfills early on, forcing larger purchases at higher prices later—resulting in higher overall cost. While this approach might perform better in volatile or declining markets, it struggled under trending conditions.
 
